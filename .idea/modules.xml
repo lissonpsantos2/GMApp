@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<<<<<<< HEAD
-      <module fileurl="file://$PROJECT_DIR$/camera-map-app.iml" filepath="$PROJECT_DIR$/camera-map-app.iml" />
-=======
+      <module fileurl="file://$PROJECT_DIR$/.idea/GMApp-2.iml" filepath="$PROJECT_DIR$/.idea/GMApp-2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cim.iml" filepath="$PROJECT_DIR$/cim.iml" />
->>>>>>> 6a0f4a775ac31e3ff539c181c59cedbc1d04f85b
     </modules>
   </component>
 </project>

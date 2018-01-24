@@ -3,10 +3,12 @@ package com.es2.gmapp;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -19,10 +21,26 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private class TirarFoto {
+
+
+        public void dispatchTakePictureIntent () {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null){
+                Log.d("log: ", "Chamou a activity da camera");
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+
+
+
+
+    }
 
     private GoogleMap mMap;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private TirarFoto tirarFoto = new TirarFoto();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,20 +54,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         ImageButton takePhoto = findViewById(R.id.camera);
 
-        takePhoto.setOnClickListener((View.OnClickListener) MapsActivity.this);
+        takePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getPermissions();
+                tirarFoto.dispatchTakePictureIntent();
+            }
+        });
     }
 
-    public void dispatchTakePictureIntent(){
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null){
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
             Bundle extras = data.getExtras();
             assert extras != null;
+            Log.d("log: ", "terminou a activity da camera");
+
             //Bitmap imageBitmap = (Bitmap) extras.get("data");
             //result.setImageBitmap(imageBitmap);
         }
@@ -62,22 +82,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
         else
-            dispatchTakePictureIntent();
+            tirarFoto.dispatchTakePictureIntent();
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case 1: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    dispatchTakePictureIntent();
-                } else {
-                    Toast.makeText(this, "Não vai funcionar!!!", Toast.LENGTH_LONG).show();
+                    tirarFoto.dispatchTakePictureIntent();
                 }
+                    /*else {
+                        Toast.makeText(this, "Não vai funcionar!!!", Toast.LENGTH_LONG).show();
+                    }*/
                 return;
             }
         }
     }
+
 
     /**
      * Manipulates the map once available.
@@ -99,9 +120,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
-    @Override
-    public void onClick(View view) {
-        getPermissions();
-        dispatchTakePictureIntent();
-    }
+
 }
