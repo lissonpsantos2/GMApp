@@ -2,5 +2,10 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+<<<<<<< HEAD
+=======
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/camera-map-app" vcs="Git" />
+>>>>>>> 6a0f4a775ac31e3ff539c181c59cedbc1d04f85b
   </component>
 </project>
